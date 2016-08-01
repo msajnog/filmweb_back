@@ -13,6 +13,9 @@ var passport = require('passport');
 var config = require('./config/database');
 var jwt = require('jwt-simple');
 
+var Movie = require('./app/models/movie');
+var Category = require('./app/models/category');
+
 var port = process.env.PORT || 8080;        // set our port
 
 mongoose.connect(config.database);
@@ -58,6 +61,74 @@ router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
+// MOVIE ROUTES
+router.route('/movies')
+  .post(function(req, res) {
+    var movie = new Movie();
+    movie.title = req.body.title;
+    movie.description = req.body.description;
+    movie.director = req.body.director;
+    movie.categories = req.body.categories;
+
+    movie.save(function(err) {
+        if (err) {
+          res.send({status: false, error: err});
+        }
+
+        res.json({status: true, message: 'Movie saved'});
+    });
+  })
+  .get(function(req, res) {
+    Movie.find(function(err, movies) {
+      if (err) {
+        res.send({status: false, error: err});
+      }
+
+      res.json({status: true, data: movies});
+    });
+  });
+
+  router.route('/movies/:movie_id')
+    .get(function(req, res) {
+      Movie.findById(req.params.movie_id, function(err, movie) {
+        if (err) {
+          res.send({status: false, error: err});
+        }
+
+        res.json({status: true, data: movie});
+      })
+    })
+    .put(function(req, res) {
+      Movie.findById(req.params.honey_id, function(err, movie) {
+        if (err) {
+          res.send({status: false, error: err});
+        }
+
+        movie.title = req.body.title;
+        movie.description = req.body.description;
+        movie.director = req.body.director;
+        movie.categories = req.body.categories;
+
+        movie.save(function(err) {
+          if (err) {
+            res.send({status: false, error: err});
+          }
+
+          res.json({status: true, message: 'Movie saved'});
+        });
+      });
+    })
+    .delete(function(req, res) {
+      Movie.remove({
+        _id: req.params.movie_id
+      }, function(err, movie) {
+        if (err) {
+          res.send({status: false, error: err});
+        }
+
+        res.json({status: true, message: 'Movie deleted'});
+      });
+    });
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
