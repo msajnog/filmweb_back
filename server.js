@@ -99,7 +99,7 @@ router.route('/movies')
       })
     })
     .put(function(req, res) {
-      Movie.findById(req.params.honey_id, function(err, movie) {
+      Movie.findById(req.params.movie_id, function(err, movie) {
         if (err) {
           res.send({status: false, error: err});
         }
@@ -129,6 +129,41 @@ router.route('/movies')
         res.json({status: true, message: 'Movie deleted'});
       });
     });
+
+    router.route('/moviess/:category')
+      .get(function(req, res) {
+        Movie.find({categories: req.params.category}, function(err, movie) {
+          if (err) {
+            res.send({status: false, error: err});
+          }
+
+          res.json({status: true, data: movie});
+        })
+      });
+
+    // CATEGORY ROUTES
+    router.route('/categories')
+      .post(function(req, res) {
+        var category = new Category();
+        category.name = req.body.name;
+
+        category.save(function(err) {
+            if (err) {
+              res.send({status: false, error: err});
+            }
+
+            res.json({status: true, message: 'Category saved'});
+        });
+      })
+      .get(function(req, res) {
+        Category.find(function(err, categories) {
+          if (err) {
+            res.send({status: false, error: err});
+          }
+
+          res.json({status: true, data: categories});
+        });
+      });
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
