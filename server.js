@@ -130,17 +130,6 @@ router.route('/movies')
       });
     });
 
-    router.route('/moviess/:category')
-      .get(function(req, res) {
-        Movie.find({categories: req.params.category}, function(err, movie) {
-          if (err) {
-            res.send({status: false, error: err});
-          }
-
-          res.json({status: true, data: movie});
-        })
-      });
-
     // CATEGORY ROUTES
     router.route('/categories')
       .post(function(req, res) {
@@ -164,6 +153,27 @@ router.route('/movies')
           res.json({status: true, data: categories});
         });
       });
+
+
+      router.route('/category/:category_id')
+        .get(function(req, res) {
+          var categoryData;
+          Category.findById(req.params.category_id, function(err, category) {
+            if (err) {
+              res.send({status: false, error: err});
+            }
+
+            categoryData = category;
+          })
+
+          Movie.find({categories: req.params.category_id}, function(err, movies) {
+            if (err) {
+              res.send({status: false, error: err});
+            }
+
+            res.json({status: true, category: categoryData, movies: movies});
+          })
+        });
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
