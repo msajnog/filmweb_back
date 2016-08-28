@@ -1,12 +1,16 @@
 {
-  "name": "supermiodek",
+  "name": "filmweb",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:msajnog/filmweb_back.git"
+  },
+  "author": "M. Sajnog",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
